@@ -181,12 +181,12 @@ public class DockerAPI extends AbstractDescribableImpl<DockerAPI> {
      */
     public DockerClient getClient(int activityTimeoutInSeconds) {
         return getOrMakeClient(
-            dockerHost.getUri(),
-            dockerHost.getCredentialsId(),
-            activityTimeoutInSeconds,
-            connectTimeout,
-            registryCredentialsId,
-            registryUrl);
+                dockerHost.getUri(),
+                dockerHost.getCredentialsId(),
+                activityTimeoutInSeconds,
+                connectTimeout,
+                registryCredentialsId,
+                registryUrl);
     }
 
     /** Caches connections until they've been unused for 5 minutes */
@@ -210,31 +210,31 @@ public class DockerAPI extends AbstractDescribableImpl<DockerAPI> {
 
     /** Obtains a {@link DockerClient} from the cache, or makes one and puts it in the cache, implicitly telling the cache we need it. */
     private static DockerClient getOrMakeClient(
-        final String dockerUri,
-        final String credentialsId,
-        final int readTimeout,
-        final int connectTimeout,
-        final String registryCredentialsId,
-        final String registryUrl) {
+            final String dockerUri,
+            final String credentialsId,
+            final int readTimeout,
+            final int connectTimeout,
+            final String registryCredentialsId,
+            final String registryUrl) {
         final Integer readTimeoutInMillisecondsOrNull = readTimeout > 0 ? readTimeout * 1000 : null;
         final Integer connectTimeoutInMillisecondsOrNull = connectTimeout > 0 ? connectTimeout * 1000 : null;
         final DockerClientParameters cacheKey = new DockerClientParameters(
-            dockerUri,
-            credentialsId,
-            readTimeoutInMillisecondsOrNull,
-            connectTimeoutInMillisecondsOrNull,
-            registryCredentialsId,
-            registryUrl);
+                dockerUri,
+                credentialsId,
+                readTimeoutInMillisecondsOrNull,
+                connectTimeoutInMillisecondsOrNull,
+                registryCredentialsId,
+                registryUrl);
         synchronized (CLIENT_CACHE) {
             SharableDockerClient client = CLIENT_CACHE.getAndIncrementUsage(cacheKey);
             if (client == null) {
                 client = makeClient(
-                    dockerUri,
-                    credentialsId,
-                    readTimeoutInMillisecondsOrNull,
-                    connectTimeoutInMillisecondsOrNull,
-                    registryCredentialsId,
-                    registryUrl);
+                        dockerUri,
+                        credentialsId,
+                        readTimeoutInMillisecondsOrNull,
+                        connectTimeoutInMillisecondsOrNull,
+                        registryCredentialsId,
+                        registryUrl);
                 LOGGER.info("Cached connection {} to {}", client, cacheKey);
                 CLIENT_CACHE.cacheAndIncrementUsage(cacheKey, client);
             }
@@ -281,9 +281,9 @@ public class DockerAPI extends AbstractDescribableImpl<DockerAPI> {
             final String dockerUri,
             final String credentialsId,
             final Integer readTimeoutInMillisecondsOrNull,
-        final Integer connectTimeoutInMillisecondsOrNull,
-        final String registryCredentialsId,
-        final String registryUrl) {
+            final Integer connectTimeoutInMillisecondsOrNull,
+            final String registryCredentialsId,
+            final String registryUrl) {
         DockerHttpClient httpClient = null;
         DockerClient actualClient = null;
         try {
@@ -303,15 +303,16 @@ public class DockerAPI extends AbstractDescribableImpl<DockerAPI> {
             if (registryCredentialsId != null && registryUrl != null) {
                 StandardUsernamePasswordCredentials creds = getUsername(registryCredentialsId);
                 DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
-                    .withRegistryUsername(creds.getUsername())
-                    .withRegistryPassword(creds.getPassword().getPlainText())
-                    .withRegistryEmail("test@bics.com")
-                    .withRegistryUrl(registryUrl)
-                    .build();
+                        .withRegistryUsername(creds.getUsername())
+                        .withRegistryPassword(creds.getPassword().getPlainText())
+                        .withRegistryEmail("test@bics.com")
+                        .withRegistryUrl(registryUrl)
+                        .build();
                 actualClient = DockerClientImpl.getInstance(config, httpClient);
             } else {
                 actualClient = DockerClientBuilder.getInstance()
-                    .withDockerHttpClient(httpClient).build();
+                        .withDockerHttpClient(httpClient)
+                        .build();
             }
             final SharableDockerClient multiUsageClient = new SharableDockerClient(actualClient);
             // if we've got this far, we're going to succeed, so we need to ensure that we
@@ -350,8 +351,8 @@ public class DockerAPI extends AbstractDescribableImpl<DockerAPI> {
 
     private static StandardUsernamePasswordCredentials getUsername(String credentialsId) {
         return firstOrNull(
-            lookupCredentials(StandardUsernamePasswordCredentials.class, Jenkins.get(), ACL.SYSTEM, List.of()),
-            withId(credentialsId));
+                lookupCredentials(StandardUsernamePasswordCredentials.class, Jenkins.get(), ACL.SYSTEM, List.of()),
+                withId(credentialsId));
     }
 
     /**
