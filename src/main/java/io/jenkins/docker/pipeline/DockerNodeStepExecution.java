@@ -53,6 +53,7 @@ class DockerNodeStepExecution extends StepExecution {
     private final String credentialsId;
     private final String image;
     private final String remoteFs;
+    private final String registryCredentialsId;
     /** The {@link DockerComputerConnector} ... which has to be {@link Serializable} too (not all are) */
     private final Serializable connector;
 
@@ -65,7 +66,8 @@ class DockerNodeStepExecution extends StepExecution {
             String dockerHost,
             String credentialsId,
             String image,
-            String remoteFs) {
+            String remoteFs,
+            String registryCredentialsId) {
         super(context);
         if (connector != null) {
             assertIsSerializableDockerComputerConnector(connector);
@@ -78,6 +80,7 @@ class DockerNodeStepExecution extends StepExecution {
         this.credentialsId = credentialsId;
         this.image = image;
         this.remoteFs = remoteFs;
+        this.registryCredentialsId = registryCredentialsId;
     }
 
     /**
@@ -141,7 +144,8 @@ class DockerNodeStepExecution extends StepExecution {
         if (dockerHost == null && credentialsId == null) {
             api = defaultApi();
         } else {
-            api = new DockerAPI(new DockerServerEndpoint(dockerHost, credentialsId));
+            api = new DockerAPI(
+                    new DockerServerEndpoint(dockerHost, credentialsId), registryCredentialsId);
         }
 
         final DockerTransientNode node;

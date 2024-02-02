@@ -61,7 +61,7 @@
 
   <properties>
     <revision>1.6</revision>
-    <changelist>-SNAPSHOT</changelist>
+    <changelist>-VIKTOR</changelist>
     <jenkins.version>2.414.3</jenkins.version>
     <gitHubRepo>jenkinsci/docker-plugin</gitHubRepo>
     <!-- Our unit-tests that talk to a real docker deamon aren't very stable -->

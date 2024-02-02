@@ -8,6 +8,7 @@ import hudson.model.Descriptor;
 import hudson.model.Item;
 import hudson.util.ListBoxModel;
 import io.jenkins.docker.connector.DockerComputerConnector;
+import io.jenkins.docker.credentials.DockerRegistryCredentials;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class DockerAgent extends DeclarativeAgent<DockerAgent> {
     private String dockerHost;
     private String credentialsId;
     private String remoteFs;
+    private String registryCredentialsId;
 
     @SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "Checked in setter")
     private DockerComputerConnector connector;
@@ -88,6 +90,15 @@ public class DockerAgent extends DeclarativeAgent<DockerAgent> {
         }
     }
 
+    public String getRegistryCredentialsId() {
+        return registryCredentialsId;
+    }
+
+    @DataBoundSetter
+    public void setRegistryCredentialsId(String registryCredentialsId) {
+        this.registryCredentialsId = registryCredentialsId;
+    }
+
     public Map<String, Object> getAsArgs() {
         Map<String, Object> args = new LinkedHashMap<>();
         args.put("image", image);
@@ -103,6 +114,10 @@ public class DockerAgent extends DeclarativeAgent<DockerAgent> {
         if (connector != null) {
             args.put("connector", connector);
         }
+        if (registryCredentialsId != null) {
+            args.put("registryCredentialsId", registryCredentialsId);
+        }
+
         return args;
     }
 
@@ -121,6 +136,13 @@ public class DockerAgent extends DeclarativeAgent<DockerAgent> {
             return ExtensionList.lookupSingleton(DockerServerEndpoint.DescriptorImpl.class)
                     .doFillCredentialsIdItems(item, uri);
         }
+
+        @POST
+        public ListBoxModel doFillRegistryCredentialsIdItems(@AncestorInPath Item item, @QueryParameter String uri) {
+            return ExtensionList.lookupSingleton(DockerRegistryCredentials.DescriptorImpl.class)
+                .doFillRegistryCredentialsIdItems(item, uri);
+        }
+
 
         public List<Descriptor<? extends DockerComputerConnector>> getAcceptableConnectorDescriptors() {
             return ExtensionList.lookupSingleton(DockerNodeStep.DescriptorImpl.class)

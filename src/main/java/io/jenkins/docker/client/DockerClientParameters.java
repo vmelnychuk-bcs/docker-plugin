@@ -7,6 +7,7 @@ class DockerClientParameters {
     final String credentialsId;
     final Integer readTimeoutInMsOrNull;
     final Integer connectTimeoutInMsOrNull;
+    final String registryCredentialsId;
 
     DockerClientParameters(
             String dockerUri, String credentialsId, Integer readTimeoutInMsOrNull, Integer connectTimeoutInMsOrNull) {
@@ -14,6 +15,20 @@ class DockerClientParameters {
         this.credentialsId = credentialsId;
         this.readTimeoutInMsOrNull = readTimeoutInMsOrNull;
         this.connectTimeoutInMsOrNull = connectTimeoutInMsOrNull;
+        this.registryCredentialsId = "";
+    }
+
+    DockerClientParameters(
+            String dockerUri,
+            String credentialsId,
+            Integer readTimeoutInMsOrNull,
+            Integer connectTimeoutInMsOrNull,
+            String registryCredentialsId) {
+        this.dockerUri = dockerUri;
+        this.credentialsId = credentialsId;
+        this.readTimeoutInMsOrNull = readTimeoutInMsOrNull;
+        this.connectTimeoutInMsOrNull = connectTimeoutInMsOrNull;
+        this.registryCredentialsId = registryCredentialsId;
     }
 
     public String getDockerUri() {
@@ -34,7 +49,12 @@ class DockerClientParameters {
 
     @Override
     public int hashCode() {
-        return Objects.hash(dockerUri, credentialsId, connectTimeoutInMsOrNull, readTimeoutInMsOrNull);
+        return Objects.hash(
+                dockerUri,
+                credentialsId,
+                connectTimeoutInMsOrNull,
+                readTimeoutInMsOrNull,
+            registryCredentialsId);
     }
 
     @Override
@@ -49,7 +69,8 @@ class DockerClientParameters {
         return Objects.equals(dockerUri, other.dockerUri)
                 && Objects.equals(credentialsId, other.credentialsId)
                 && Objects.equals(readTimeoutInMsOrNull, other.readTimeoutInMsOrNull)
-                && Objects.equals(connectTimeoutInMsOrNull, other.connectTimeoutInMsOrNull);
+                && Objects.equals(connectTimeoutInMsOrNull, other.connectTimeoutInMsOrNull)
+                && Objects.equals(registryCredentialsId, other.registryCredentialsId);
     }
 
     @Override
