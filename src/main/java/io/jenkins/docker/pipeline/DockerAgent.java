@@ -30,6 +30,8 @@ public class DockerAgent extends DeclarativeAgent<DockerAgent> {
     private String dockerHost;
     private String credentialsId;
     private String remoteFs;
+    private String registryCredentialsId;
+    private String registryUrl;
 
     @SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "Checked in setter")
     private DockerComputerConnector connector;
@@ -88,6 +90,24 @@ public class DockerAgent extends DeclarativeAgent<DockerAgent> {
         }
     }
 
+    public String getRegistryUrl() {
+        return registryUrl;
+    }
+
+    @DataBoundSetter
+    public void setRegistryUrl(String registryUrl) {
+        this.registryUrl = registryUrl;
+    }
+
+    public String getRegistryCredentialsId() {
+        return registryCredentialsId;
+    }
+
+    @DataBoundSetter
+    public void setRegistryCredentialsId(String registryCredentialsId) {
+        this.registryCredentialsId = registryCredentialsId;
+    }
+
     public Map<String, Object> getAsArgs() {
         Map<String, Object> args = new LinkedHashMap<>();
         args.put("image", image);
@@ -103,6 +123,13 @@ public class DockerAgent extends DeclarativeAgent<DockerAgent> {
         if (connector != null) {
             args.put("connector", connector);
         }
+        if (registryUrl != null) {
+            args.put("registryUrl", registryUrl);
+        }
+        if (registryCredentialsId != null) {
+            args.put("registryCredentialsId", registryCredentialsId);
+        }
+
         return args;
     }
 

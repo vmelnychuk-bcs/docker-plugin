@@ -42,6 +42,8 @@ public class DockerNodeStep extends Step {
     private String image;
 
     private String remoteFs;
+    private String registryCredentialsId;
+    private String registryUrl;
 
     private DockerComputerConnector connector;
 
@@ -81,6 +83,16 @@ public class DockerNodeStep extends Step {
         this.remoteFs = Util.fixEmpty(remoteFs);
     }
 
+    @DataBoundSetter
+    public void setRegistryCredentialsId(String registryCredentialsId) {
+        this.registryCredentialsId = registryCredentialsId;
+    }
+
+    @DataBoundSetter
+    public void setRegistryUrl(String registryUrl) {
+        this.registryUrl = registryUrl;
+    }
+
     public <T extends DockerComputerConnector & Serializable> T getConnector() {
         if (connector == null) {
             return null;
@@ -101,7 +113,8 @@ public class DockerNodeStep extends Step {
 
     @Override
     public StepExecution start(StepContext context) throws Exception {
-        return new DockerNodeStepExecution(context, connector, dockerHost, credentialsId, image, remoteFs);
+        return new DockerNodeStepExecution(
+                context, connector, dockerHost, credentialsId, image, remoteFs, registryCredentialsId, registryUrl);
     }
 
     @Extension(optional = true)
